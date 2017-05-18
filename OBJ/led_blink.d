@@ -2,7 +2,7 @@
 ..\obj\led_blink.o: ..\SRC\driver\drv_sysclk.h
 ..\obj\led_blink.o: ..\USER\stm32f4xx.h
 ..\obj\led_blink.o: ..\CORE\core_cm4.h
-..\obj\led_blink.o: E:\Myprogram\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\led_blink.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdint.h
 ..\obj\led_blink.o: ..\CORE\core_cmInstr.h
 ..\obj\led_blink.o: ..\CORE\core_cmFunc.h
 ..\obj\led_blink.o: ..\CORE\core_cm4_simd.h

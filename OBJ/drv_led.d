@@ -2,7 +2,7 @@
 ..\obj\drv_led.o: ..\SRC\driver\drv_led.h
 ..\obj\drv_led.o: ..\USER\stm32f4xx.h
 ..\obj\drv_led.o: ..\CORE\core_cm4.h
-..\obj\drv_led.o: E:\Myprogram\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+..\obj\drv_led.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdint.h
 ..\obj\drv_led.o: ..\CORE\core_cmInstr.h
 ..\obj\drv_led.o: ..\CORE\core_cmFunc.h
 ..\obj\drv_led.o: ..\CORE\core_cm4_simd.h
