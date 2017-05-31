@@ -1,7 +1,7 @@
 ..\obj\main.o: ..\SRC\application\main.c
 ..\obj\main.o: ..\USER\stm32f4xx.h
 ..\obj\main.o: ..\CORE\core_cm4.h
-..\obj\main.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdint.h
+..\obj\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\main.o: ..\CORE\core_cmInstr.h
 ..\obj\main.o: ..\CORE\core_cmFunc.h
 ..\obj\main.o: ..\CORE\core_cm4_simd.h
@@ -37,11 +37,11 @@
 ..\obj\main.o: ..\SRC\driver\drv_sysclk.h
 ..\obj\main.o: ..\SRC\driver\drv_timer.h
 ..\obj\main.o: ..\SRC\driver\hand_define.h
+..\obj\main.o: ..\SRC\driver\drv_uart.h
 ..\obj\main.o: ..\SRC\driver\drv_spi.h
 ..\obj\main.o: ..\SRC\inerface\inter_sensors.h
 ..\obj\main.o: ..\SRC\driver\drv_adc.h
-..\obj\main.o: ..\SRC\application\sys_fuction.h
-..\obj\main.o: ..\SRC\driver\sol_uart.h
+..\obj\main.o: ..\SRC\inerface\transfer_protocol_uart.h
+..\obj\main.o: ..\SRC\inerface\Hand_Main_Fuction.h
 ..\obj\main.o: ..\SRC\inerface\led_blink.h
 ..\obj\main.o: ..\SRC\driver\drv_led.h
-..\obj\main.o: ..\SRC\driver\drv_uart.h

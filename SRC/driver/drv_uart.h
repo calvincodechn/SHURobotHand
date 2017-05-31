@@ -11,10 +11,13 @@ typedef void (*uart_process_on_rx)(uint8_t data);
 
 
 
-extern void drv_uart_init(void);
-extern void drv_put_byte(USART_TypeDef* USARTx, uint8_t data);
-extern void drv_put_bytes(USART_TypeDef* USARTx, const uint8_t *data, uint16_t len);
+extern void drv_uart_init(void); //串口初始化
 
+extern void drv_put_byte(USART_TypeDef* USARTx, uint8_t data); //传输8位字节
+
+extern void drv_put_bytes(USART_TypeDef* USARTx, const uint8_t *data, uint16_t len); //传输字符串
+
+extern void 	uart_hand_backcall(uart_process_on_rx process_func);
 //extern void SendPackage(unsigned char ucIsSend);
 //typedef void (*proc_on_rx_t)(u8 data);
 //typedef void (*hand_uart_rx_proc_t)( void * data, u32 size);

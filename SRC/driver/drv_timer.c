@@ -1,5 +1,5 @@
 #include "drv_timer.h" 
-#include "sys_fuction.h"
+//#include "sys_fuction.h"
 
 
 GPIO_TypeDef* GPIO_TYPE[] =    {GPIOD, GPIOE, GPIOD, GPIOB, GPIOE, GPIOD};

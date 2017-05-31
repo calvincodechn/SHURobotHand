@@ -1,6 +1,6 @@
 ..\obj\inter_sensors.o: ..\SRC\inerface\inter_sensors.c
 ..\obj\inter_sensors.o: ..\SRC\inerface\inter_sensors.h
-..\obj\inter_sensors.o: C:\Keil_v5\ARM\ARMCC\bin\..\include\stdint.h
+..\obj\inter_sensors.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 ..\obj\inter_sensors.o: ..\SRC\driver\drv_adc.h
 ..\obj\inter_sensors.o: ..\USER\stm32f4xx.h
 ..\obj\inter_sensors.o: ..\CORE\core_cm4.h

@@ -1,7 +1,9 @@
---cpu Cortex-M4.fp
+--cpu=Cortex-M4.fp
 "..\obj\main.o"
+"..\obj\hand_main_fuction.o"
 "..\obj\inter_sensors.o"
 "..\obj\led_blink.o"
+"..\obj\tran_protocol_uart.o"
 "..\obj\drv_adc.o"
 "..\obj\drv_spi.o"
 "..\obj\drv_sysclk.o"

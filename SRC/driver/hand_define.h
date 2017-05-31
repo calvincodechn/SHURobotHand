@@ -1,7 +1,7 @@
 #ifndef HAND_DEFINE_H
 #define HAND_DEFINE_H
 
-
+#include  "drv_uart.h"
 
 
 
@@ -31,6 +31,43 @@ typedef enum{
 	SERVO_DIR_DOWN,
 	SERVO_DIR_STOP
 }SERVO_DIR_SEL;
+
+typedef enum{
+	Hand_value_new      = 0,
+	Hand_value_old1,				
+	Hand_value_old2,
+	Hand_value_old3,
+	Hand_value_average,
+	Hand_value_total
+}hand_value;
+
+
+
+typedef struct{
+      uint8_t     Angle_rec_state;                       //一个包在读取过程中的状态
+      uint16_t    Angle_Value_rec[FINGER_SEL_TOTAL];
+			uint16_t    Pressure_Value_rec[FINGER_SEL_ROOT];
+			uint16_t    Current_Value_rec[FINGER_SEL_TOTAL];
+}HandValue_Rec;
+
+typedef struct{
+      //uint8_t     Angle_rec_state;                       //一个包在读取过程中的状态
+      uint16_t    Angle_Value_start[FINGER_SEL_TOTAL];
+			
+}Angle_Value_Start;
+
+
+typedef struct{
+      
+			int16_t    Hand_Angle_value[FINGER_SEL_TOTAL][Hand_value_total];
+			int16_t    Hand_Pressure_value[FINGER_SEL_TOTAL][Hand_value_total];
+			int16_t    Hand_Current_value[FINGER_SEL_TOTAL][Hand_value_total];
+	
+}Hand_Value;
+
+
+
+
 
 
 #endif

@@ -3,7 +3,7 @@
 //static proc_on_rx_t  _rx_proc = NULL;
 //hand_uart_rx_proc_t   rx_port;
 //unsigned char SendFlag = 0x01;
-//static uart_process_on_rx _rx_process_hand = NULL;
+static uart_process_on_rx _rx_process_hand = NULL;
 
 
 static void _drv_uart_control_init(uint32_t baudrate)
@@ -94,15 +94,15 @@ static void _drv_uart_system_init(uint32_t baudrate)
 void drv_uart_init(void)
 {
 	_drv_uart_control_init(115200);
-	//_drv_uart_system_init(115200);
+	_drv_uart_system_init(115200);
 }
 
 
-/*void 	uart_hand_backcall(uart_process_on_rx process_func)
+void 	uart_hand_backcall(uart_process_on_rx process_func)
 {
 		_rx_process_hand = process_func;
 }
-*/
+
 
 
 void drv_put_byte(USART_TypeDef* USARTx, uint8_t data)
@@ -116,7 +116,7 @@ void drv_put_bytes(USART_TypeDef* USARTx, const uint8_t *data, uint16_t len)
 {
     while(len--)
     {
-		drv_put_byte(USARTx, *data++);
+				drv_put_byte(USARTx, *data++);
     }
 }
 
@@ -128,6 +128,8 @@ void USART1_IRQHandler(void)
 	{	
 		uint8_t temp;
 		temp = USART_ReceiveData(UartControl)& 0xFF;
+		//if(_rx_process_hand)
+		// _rx_process_hand(temp);
 		//drv_put_byte(UartControl, temp);
 		//USART_SendData(UartControl, temp);
 	}
@@ -141,7 +143,9 @@ void USART2_IRQHandler(void)
 	{
 		uint8_t temp;
 		temp = USART_ReceiveData(UartSysterm) & 0xFF;
-		USART_SendData(UartSysterm, temp);
+		if(_rx_process_hand)
+			_rx_process_hand(temp);
+		 //USART_SendData(UartSysterm, temp);
 	}
 }
 

@@ -8,7 +8,7 @@
 #include <stdint.h>
 #include "hand_define.h"
 #include "drv_sysclk.h"
-#include "sol_uart.h"
+//#include "sol_uart.h"
 
 extern unsigned char WaitForReceive;
 

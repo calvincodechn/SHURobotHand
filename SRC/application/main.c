@@ -3,8 +3,10 @@
 #include "drv_timer.h"
 #include "drv_spi.h"
 #include "inter_sensors.h"
-#include "sys_fuction.h"
-#include "sol_uart.h"
+//#include "sys_fuction.h"
+#include "transfer_protocol_uart.h"
+#include "Hand_Main_Fuction.h"
+
 #include "led_blink.h"
 #include "drv_uart.h"
 
@@ -21,16 +23,15 @@ void init_dev(void)
 	timer_pwm_init(12,467);
 	timer_Int_Init();
 	gpio_motor_dir_init();
-	//My_USART2_Init();
+	
 	drv_ads_anglular_init();
-	//timer_Int_Init();
-	//init_sensor_interface();
-	//init_hand_com();
-	//Hand_measurement_init();
-	//Sys_Init_Value();
+	
+	init_sensor_interface();
+	init_hand_com();
+
 	drv_led_init();
-	ADCC_Configuration();
-	ADCP_Configuration();
+	//ADCC_Configuration();
+	//ADCP_Configuration();
 }
 
 static int32_t loop(void)
@@ -52,10 +53,14 @@ int main(void)
 			_SPI_start_sample();
 		}*/
 		
+		
 		static uint64_t time_test = 0;
 		static int32_t period = 0;
 		static uint8_t dir = 0;
-		USART_SendData(USART1, 0x99);
+		
+		hand_message_loop();
+		
+		//USART_SendData(USART1, 0x99);
 		if(millis() - time_test > 10)
 		{
 			ADC_SENSORS* adc_sensors;
