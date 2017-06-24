@@ -4,8 +4,6 @@
 SPI_SENSORS spi_sensors;
  
 
- 
- 
 static void SPI2_Configureation(void)	
 {
   
@@ -66,7 +64,6 @@ void drv_ads_anglular_init(void)
 	SPI2_Configureation();
 }
 
-
 uint16_t SPI1_ReadWriteByte(u16 TxData)
 {		 			 
 	uint16_t temp_rev; 
@@ -82,24 +79,20 @@ uint16_t SPI1_ReadWriteByte(u16 TxData)
 	return temp_rev;
 }
 
-
 uint16_t* _SPI_start_sample(void)
 {
-		
-		//SPI1_ReadWriteByte(0X0000);
-		//spi_sensors.spi_value_a[0]=SPI1_ReadWriteByte(0X1800);
-		
-		SPI1_ReadWriteByte(0X0000);
-		spi_sensors.spi_value_a[0]=SPI1_ReadWriteByte(0X0800);
-		spi_sensors.spi_value_a[1]=SPI1_ReadWriteByte(0X1000);
-		spi_sensors.spi_value_a[2]=SPI1_ReadWriteByte(0X1800);
- 		spi_sensors.spi_value_a[3]=SPI1_ReadWriteByte(0X2000);
- 		spi_sensors.spi_value_a[4]=SPI1_ReadWriteByte(0X2800);
- 		spi_sensors.spi_value_a[5]=SPI1_ReadWriteByte(0X0000);		//*/
-		
-		return spi_sensors.spi_value_a;
+  //SPI1_ReadWriteByte(0X0000);
+  //spi_sensors.spi_value_a[0]=SPI1_ReadWriteByte(0X1800);
+	
+  SPI1_ReadWriteByte(0X0000);
+  spi_sensors.spi_value_a[0]=SPI1_ReadWriteByte(0X0800);
+  spi_sensors.spi_value_a[1]=SPI1_ReadWriteByte(0X1000);
+  spi_sensors.spi_value_a[2]=SPI1_ReadWriteByte(0X1800);
+  spi_sensors.spi_value_a[3]=SPI1_ReadWriteByte(0X2000);
+  spi_sensors.spi_value_a[4]=SPI1_ReadWriteByte(0X2800);
+  spi_sensors.spi_value_a[5]=SPI1_ReadWriteByte(0X0000);		//*/	
+  return spi_sensors.spi_value_a;
 }
-
 
 SPI_SENSORS * get_spi_sensor_handle(void)
 {

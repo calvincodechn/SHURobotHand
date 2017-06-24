@@ -2,6 +2,7 @@
 
 #ifndef _CURRENT_LOOP_H
 #define _CURRENT_LOOP_H
+
 #include"drv_timer.h"
 
 #define CURRENT_FILTER_LEN 5
@@ -27,8 +28,11 @@ typedef struct motor_para{
   uint32_t current_input;
   uint32_t current_alarm_time; //the time that current keeps large.
   CurrentFilter current_filter;  //remember to init
-	PIDPara current_pid;
+  PIDPara current_pid;
   struct motor_para *next;
 }CurrentLoopPara, *pCurrentLoopPara;
+
+
+extern void current_loop_init(void);
 
 #endif

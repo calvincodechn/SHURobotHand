@@ -8,7 +8,7 @@
 
 
 
-typedef struct{
+typedef struct sensor_interface {
 	//the sensors of fingers
 	uint16_t *finger_pressure_value;
 	
