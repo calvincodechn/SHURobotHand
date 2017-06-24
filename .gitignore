@@ -1,5 +1,5 @@
-OBJ/Template*
-OBJ/DebugConfig
-OBJ/Jlin*s
-USER
+USER/Template*
+USER/DebugConfig
+USER/Jlin*s
+OBJ/*
 DOC
