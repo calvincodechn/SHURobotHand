@@ -74,7 +74,7 @@ void ADCC_Configuration(void)
 	ADC_RegularChannelConfig(ADC3, ADC_Channel_13,6, ADC_SampleTime_480Cycles );
 
 	ADC_DMARequestAfterLastTransferCmd(ADC3, ENABLE); 
-
+	
 	ADC_DMACmd(ADC3, ENABLE);
 	ADC_Cmd(ADC3, ENABLE);	
 
@@ -145,14 +145,14 @@ void ADCP_Configuration(void)
 uint16_t* _ADCP_start_sample(void)				//该处需要优化，防止while等待时间过长，影响程序效率
 {
 	ADC_SoftwareStartConv(ADC1); 
-	//while(RESET == DMA_GetFlagStatus(DMA2_Stream0,DMA_FLAG_TCIF0));
+	while(RESET == DMA_GetFlagStatus(DMA2_Stream0,DMA_FLAG_TCIF0));
 	return adc_sensor.adc_value_p;
 }
 
 uint16_t* _ADCC_start_sample(void)
 {
 	ADC_SoftwareStartConv(ADC3); 
-	//while(RESET == DMA_GetFlagStatus(DMA2_Stream1,DMA_FLAG_TCIF2));
+	while(RESET == DMA_GetFlagStatus(DMA2_Stream1,DMA_FLAG_TCIF2));
 	return adc_sensor.adc_value_c;
 }
 
