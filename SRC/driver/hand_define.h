@@ -3,7 +3,7 @@
 
 #include  "drv_uart.h"
 
-
+#define NULL 0
 
 typedef enum{
 	FINGER_SEL_THUMB				= 0,
@@ -64,8 +64,6 @@ typedef struct{
 			int16_t    Hand_Current_value[FINGER_SEL_TOTAL][Hand_value_total];
 	
 }Hand_Value;
-
-
 
 
 
