@@ -12,38 +12,23 @@ void timer_Int_Init(void)
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
 	
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);  ///使能TIM2时钟
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5,ENABLE);  ///使能TIM5时钟
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);  
 
-	TIM_TimeBaseInitStructure.TIM_Period = 1000; 	//自动重装载值
-	TIM_TimeBaseInitStructure.TIM_Prescaler=840;  //定时器分频
-	TIM_TimeBaseInitStructure.TIM_CounterMode=TIM_CounterMode_Up; //向上计数模式
+	TIM_TimeBaseInitStructure.TIM_Period = 999; 	//(arr)
+	TIM_TimeBaseInitStructure.TIM_Prescaler=13;   //(psc)  Tclk = 84Mhz  // Tout = ((arr+1)*(psc+1))/Tclk
+	TIM_TimeBaseInitStructure.TIM_CounterMode=TIM_CounterMode_Up; //Count up mode
 	TIM_TimeBaseInitStructure.TIM_ClockDivision=TIM_CKD_DIV1; 
-	TIM_TimeBaseInit(TIM2,&TIM_TimeBaseInitStructure);//初始化TIM2//作为通用寄存器；周期为10ms
+	TIM_TimeBaseInit(TIM2,&TIM_TimeBaseInitStructure);//INIT TIM2 //The cycle is 166us
 
-	//TIM_TimeBaseInitStructure.TIM_Period = 1000; 	//自动重装载值
-	//TIM_TimeBaseInitStructure.TIM_Prescaler=84;  //定时器分频
-	//TIM_TimeBaseInitStructure.TIM_CounterMode=TIM_CounterMode_Up; //向上计数模式
-	//TIM_TimeBaseInitStructure.TIM_ClockDivision=TIM_CKD_DIV1; 
-	//TIM_TimeBaseInit(TIM5,&TIM_TimeBaseInitStructure);//初始化TIM5；作为通用寄存器；周期为1ms
-
-	TIM_ITConfig(TIM2,TIM_IT_Update,ENABLE); //允许定时器2更新中断
-	//TIM_ITConfig(TIM5,TIM_IT_Update,ENABLE); //允许定时器5更新中断
-
+	TIM_ITConfig(TIM2,TIM_IT_Update,ENABLE); //Allow interrupts
 	TIM_Cmd(TIM2,ENABLE); 
-	//TIM_Cmd(TIM5,ENABLE); 
 	
-	NVIC_InitStructure.NVIC_IRQChannel=TIM2_IRQn; //定时器2中断
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0x03; //抢占优先级3
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority=0x03; //子优先级3
+	NVIC_InitStructure.NVIC_IRQChannel=TIM2_IRQn; 
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0x02; //Preemption priority 3
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority=0x03; //Sub priority 3
 	NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
-	NVIC_Init(&NVIC_InitStructure);
-
-	//NVIC_InitStructure.NVIC_IRQChannel=TIM5_IRQn; //定时器5中断
-	//NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0x03; //抢占优先级3
-	//NVIC_InitStructure.NVIC_IRQChannelSubPriority=0x02; //子优先级2
-	//NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
-	//NVIC_Init(&NVIC_InitStructure);
+	
+	NVIC_Init(&NVIC_InitStructure); 
 }
 
 void timer_pwm_init(uint16_t timer_prescaler, uint32_t timer_period)
@@ -206,10 +191,10 @@ void TIM2_IRQHandler(void)
 {
   if(TIM_GetITStatus(TIM2,TIM_IT_Update)==SET)  
   {
-     if(current_callback_func)
-	 {
-		current_callback_func();
-	 }
-	 TIM_ClearITPendingBit(TIM2,TIM_IT_Update);
+    if(current_callback_func)
+	  {
+		  current_callback_func();
+	  }
+	  TIM_ClearITPendingBit(TIM2,TIM_IT_Update);
   }
 }

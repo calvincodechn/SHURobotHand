@@ -43,7 +43,8 @@ int main(void)
 	init_dev();
 
 	while(loop())
-	{		
+	{	
+    		
 	  //_ADCC_start_sample();
 	}
 }

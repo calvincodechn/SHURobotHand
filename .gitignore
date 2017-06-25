@@ -3,3 +3,4 @@ USER/DebugConfig
 USER/Jlink*
 OBJ/*
 DOC
+*.swp

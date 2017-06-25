@@ -6,11 +6,14 @@
 
 #define SPIA_CH_NUM 6
 
-typedef uint16_t* (*SPI_Start_Sample)(void);
 
+typedef uint16_t* (*SPI_Start_Sample)(void);
+typedef struct read_buff_a {
+	uint32_t data[SPIA_CH_NUM];
+	struct read_buff_a *next;
+}ReadBuffA, *pReadBuffA;
 
 typedef struct{
-
 	uint16_t spi_value_a[SPIA_CH_NUM];
 	
 	SPI_Start_Sample SPI_start_sample;
