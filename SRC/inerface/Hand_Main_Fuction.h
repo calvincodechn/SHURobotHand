@@ -19,7 +19,7 @@
 
 
 
-extern void hand_message_loop(void);
+//extern void hand_message_loop(void);
 extern void get_hand_sensor_value(void);
-
+extern void Hand_callback_init(void);
 #endif

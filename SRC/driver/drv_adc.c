@@ -1,11 +1,27 @@
 #include "drv_adc.h"
 #include "hand_define.h"
+#include "plat_algorithm.h"
+#include <string.h>
 
 ADC_SENSORS adc_sensor;
 
+ADC_finish  adc_finish;
 uint16_t* _ADCC_start_sample(void);
 uint16_t* _ADCP_start_sample(void);
 
+//ReadBuffC filter_current_value[ADCC_FILTER_NUM];	
+static ReadBuffC filter_current_value[ADCC_FILTER_NUM];
+
+static ReadBuffP filter_pressure_value[ADCP_FILTER_NUM];
+
+static ReadBuffC *filter_current_Value = filter_current_value;
+
+static ReadBuffP *filter_pressure_Value = filter_pressure_value;
+
+static uint8_t buff_index1 = 0;
+
+static uint8_t buff_index2 = 0;
+static void filter_arrry_init(void);
 void ADCC_Configuration()
 {    
 	GPIO_InitTypeDef  GPIO_InitStructure;
@@ -84,6 +100,10 @@ void ADCC_Configuration()
 
 	ADC_DMACmd(ADC3, ENABLE);
 	ADC_Cmd(ADC3, ENABLE);	
+	
+	
+	
+	filter_arrry_init();
 
 }	
 
@@ -109,13 +129,13 @@ void ADCP_Configuration(void)
 	DMA_InitStructure.DMA_PeripheralBaseAddr =(u32)&ADC1->DR;
 	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)adc_sensor.adc_value_p;
 	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
-	DMA_InitStructure.DMA_BufferSize = ADCP_CH_NUM;//
+	DMA_InitStructure.DMA_BufferSize = ADCC_CH_NUM;//
 	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
 	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
 	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
 	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
 	DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
-	DMA_InitStructure.DMA_Priority = DMA_Priority_Medium;
+	DMA_InitStructure.DMA_Priority = DMA_Priority_High;
 	DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;   
 	DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_HalfFull;
 	DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
@@ -132,7 +152,7 @@ void ADCP_Configuration(void)
 	ADC_InitStructure.ADC_ScanConvMode = ENABLE;
 	ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
 	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
-	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;	
+	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right; 	
 	ADC_InitStructure.ADC_NbrOfConversion =ADCP_CH_NUM;  
 	ADC_Init(ADC1, &ADC_InitStructure);
 
@@ -152,6 +172,7 @@ void ADCP_Configuration(void)
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
+	
 	DMA_ITConfig(DMA2_Stream0, DMA_IT_TC, ENABLE);
 	DMA_Cmd(DMA2_Stream0, ENABLE);
 	
@@ -179,21 +200,52 @@ ADC_SENSORS* get_adc_sensor_handle(void)
 void DMA2_Stream1_IRQHandler(void)
 {
 		if(DMA_GetITStatus(DMA2_Stream1, DMA_IT_TCIF1) != RESET)
-		{
+		{			
+				memcpy(filter_current_Value,adc_sensor.adc_value_c,6);//copy value
+				filter_current_Value = filter_current_Value->next;//loop assignment
+				if(buff_index1 < 6)
+				{					
+					  filter_buffer(filter_current_Value,ADCC_CH_NUM,buff_index1,adc_finish.adc_average_c[buff_index1]);
+						buff_index1 ++;
+				}
+				else
+					 buff_index1 = 0;
 				DMA_ClearITPendingBit(DMA2_Stream1, DMA_IT_TCIF1);
 		}
-    //DMA2_Stream1->M0AR = (uint32_t )adc_sensor.adc_text;//DMA_InitStruct->DMA_Memory0BaseAddr;
 }
 
 void DMA2_Stream0_IRQHandler(void)
 {
+		int i;
 		if(DMA_GetITStatus(DMA2_Stream0, DMA_IT_TCIF0) != RESET)
 		{
+				memcpy(filter_pressure_Value,adc_sensor.adc_value_p,10);
+				/*
+				for(i =0;i < 6;i++)
+				{
+						filter_pressure_Value->data[i] = adp_sensor.adc_value_p[i];
+				}*/
+				filter_pressure_Value = filter_pressure_Value->next;
+				if(buff_index2 < 5)
+				{
+						filter_buffer(filter_pressure_Value,ADCP_CH_NUM,buff_index2,adc_finish.adc_average_p[buff_index2]);
+						buff_index2 ++;
+					  
+				}
+				else
+					  buff_index2 = 0;
 				DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_TCIF0);
 		}
-    //DMA2_Stream1->M0AR = (uint32_t )adc_sensor.adc_text;//DMA_InitStruct->DMA_Memory0BaseAddr;
 }
 
+static void filter_arrry_init(void)
+{
+		init_circular_list(filter_current_value, ADCC_FILTER_NUM);
+	
+		init_circular_list(filter_pressure_value,ADCP_FILTER_NUM);
+}
 
-
-
+ADC_finish * get_adc_finish_handle(void)
+{
+	return &adc_finish;
+}

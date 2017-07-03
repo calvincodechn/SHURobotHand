@@ -13,6 +13,7 @@
 #define UART_MSG_PACKAGE_ENDCHAR         0x0D        // end byte
 #define HAND_DIRVER_ADR                 0x01
 
+typedef void (*UART_callback)(void);
 
 typedef struct{
       uint8_t pack_head;
@@ -72,6 +73,22 @@ typedef struct{
 extern uint8_t init_hand_com(void);
 extern PackInterface *get_pack_interface_handle(void);
 extern void protocol_uart_send_pc_msg( uint8_t *Dat, uint8_t Len, UART_CMD_Type cmd);
+extern void UART_Heart_callback(UART_callback UART_callback_Heart);
+
+extern void UART_Get_pressure_callback(UART_callback UART_callback_get_pressure);
+extern void UART_Get_angle_callback(UART_callback UART_callback_get_angle);
+extern void UART_Get_current_callback(UART_callback UART_callback_get_current);
+
+extern void UART_Set_pressure_callback(UART_callback UART_callback_set_pressure);
+extern void UART_Set_angle_callback(UART_callback UART_callback_set_angle);
+extern void UART_Set_current_callback(UART_callback UART_callback_set_current);
+
+extern void _serial_hand_handle(void);
+
+
+
+
+
 
 
 #endif

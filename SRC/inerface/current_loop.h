@@ -3,7 +3,10 @@
 #ifndef _CURRENT_LOOP_H
 #define _CURRENT_LOOP_H
 
-#include"drv_timer.h"
+#include "drv_timer.h"
+#include "hand_define.h"
+#include "plat_algorithm.h"
+#include "drv_adc.h"
 
 #define CURRENT_FILTER_LEN 5
 #define CURRENT_VEC_LEN 4

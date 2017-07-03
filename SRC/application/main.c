@@ -10,7 +10,8 @@
 #include "led_blink.h"
 #include "drv_uart.h"
 #include "current_loop.h"
-
+#include "pressure_loop.h"
+#include "angle_loop.h"
 //SENSOR_INTERFACE* Angle_sensor;
 
 
@@ -27,9 +28,11 @@ void init_dev(void)
 	drv_ads_anglular_init();
 	init_sensor_interface();
 	//init_hand_com();
-
+	Hand_callback_init();
 	drv_led_init();
 	current_loop_init();
+	pressure_loop_init();
+	angle_loop_init();
 }
 
 static int32_t loop(void)
@@ -44,7 +47,6 @@ int main(void)
 
 	while(loop())
 	{	
-    		
-	  //_ADCC_start_sample();
+			_serial_hand_handle();
 	}
 }

@@ -47,14 +47,15 @@ uint32_t i_cur = 0, j_cur = 0; \
 for(i_cur = 0; i_cur < filter_len; i_cur++) { \
 for(j_cur = 0; j_cur < filter_len - i_cur; j_cur++) { \
 if(buff_name[j_cur].data[buff_index] > buff_name[j_cur + 1].data[buff_index]) {\
-uint32_t temp = buff_name[j_cur].data[buff_index]; \
+uint16_t temp = buff_name[j_cur].data[buff_index]; \
 buff_name[j_cur].data[buff_index] = buff_name[j_cur + 1].data[buff_index]; \
 buff_name[j_cur + 1].data[buff_index] = temp; \
 } \
 } \
 } \
-*return_value = ((uint64_t)buff_name[(filter_len - 1) / 2].data[buff_index] + \
-(uint64_t)buff_name[(filter_len - 1) / 2 + (filter_len - 1) % 2].data[buff_index]) >> 1; \
+return_value = ((uint16_t)buff_name[(filter_len - 1) / 2].data[buff_index] + \
+(uint16_t)buff_name[(filter_len - 1) / 2 + (filter_len - 1) % 2].data[buff_index]) >> 1; \
 }
-
+//*return_value = ((uint64_t)buff_name[(filter_len - 1) / 2].data[buff_index] + 
+//(uint64_t)buff_name[(filter_len - 1) / 2 + (filter_len - 1) % 2].data[buff_index]) >> 1; 
 #endif

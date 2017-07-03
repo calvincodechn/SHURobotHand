@@ -6,6 +6,12 @@ GPIO_TypeDef* GPIO_TYPE[] =    {GPIOD, GPIOE, GPIOD, GPIOB, GPIOE, GPIOD};
 uint16_t GPIO_POSITIVE_PIN[] = {GPIO_Pin_14,GPIO_Pin_9,GPIO_Pin_8,GPIO_Pin_9,GPIO_Pin_0,GPIO_Pin_10};
 uint16_t GPIO_NEGETIVE_PIN[] = {GPIO_Pin_15, GPIO_Pin_10,GPIO_Pin_9,GPIO_Pin_8,GPIO_Pin_1,GPIO_Pin_11};
 static current_callback current_callback_func = NULL;
+ 
+static pressure_callback pressure_callback_func = NULL;
+
+static angle_callback angle_callback_func = NULL;
+
+static uint16_t time_count = 0;
 
 void timer_Int_Init(void)
 {
@@ -75,19 +81,19 @@ void timer_pwm_init(uint16_t timer_prescaler, uint32_t timer_period)
 	TIM_OC1Init(TIM3, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
 	TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);  //使能TIM3在CCR1上的预装载寄存器
 
-    TIM_OC2Init(TIM3, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
+  TIM_OC2Init(TIM3, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
 	TIM_OC2PreloadConfig(TIM3, TIM_OCPreload_Enable);  //使能TIM3在CCR1上的预装载寄存器
 
-    TIM_OC3Init(TIM3, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
+  TIM_OC3Init(TIM3, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
 	TIM_OC3PreloadConfig(TIM3, TIM_OCPreload_Enable);  //使能TIM3在CCR1上的预装载寄存器
 
-    TIM_OC4Init(TIM3, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
+  TIM_OC4Init(TIM3, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
 	TIM_OC4PreloadConfig(TIM3, TIM_OCPreload_Enable);  //使能TIM3在CCR1上的预装载寄存器
 
-    TIM_OC1Init(TIM4, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
+  TIM_OC1Init(TIM4, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
 	TIM_OC1PreloadConfig(TIM4, TIM_OCPreload_Enable);  //使能TIM3在CCR1上的预装载寄存器
 
-    TIM_OC2Init(TIM4, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
+  TIM_OC2Init(TIM4, &TIM_OCInitStructure);  //根据T指定的参数初始化外设TIM1 4OC1
 	TIM_OC2PreloadConfig(TIM4, TIM_OCPreload_Enable);  //使能TIM3在CCR1上的预装载寄存器
 
 	TIM_ARRPreloadConfig(TIM3,ENABLE);//ARPE使能 
@@ -184,8 +190,20 @@ void set_motor_direction(MOTOR_SERVO_SELECT f_select, SERVO_DIR_SEL servo_dir)
 }
 void current_sys_callback(current_callback current_callback_in)
 {
-  current_callback_func = current_callback_in;
+    current_callback_func = current_callback_in;
 }
+
+void pressure_sys_callback(pressure_callback pressure_callback_in)
+{
+		pressure_callback_func = pressure_callback_in;
+}
+
+void angle_sys_callback(angle_callback angle_callback_in)
+{
+		angle_callback_func = angle_callback_in;
+}
+
+
 
 void TIM2_IRQHandler(void)
 {
@@ -193,8 +211,20 @@ void TIM2_IRQHandler(void)
   {
     if(current_callback_func)
 	  {
-		  current_callback_func();
+		   current_callback_func();
 	  }
+		if(time_count == 300)
+		{
+				time_count = 0;
+				if(angle_callback_func)
+					angle_callback_func();  //per 50ms Collection angle
+		}
+		else 
+				time_count ++;
+		if(pressure_callback_func)
+		{
+			 pressure_callback_func();
+		}
 	  TIM_ClearITPendingBit(TIM2,TIM_IT_Update);
   }
 }
