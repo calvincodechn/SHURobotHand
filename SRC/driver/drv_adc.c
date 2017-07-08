@@ -25,7 +25,7 @@ static void filter_arrry_init(void);
 void ADCC_Configuration()
 {    
 	GPIO_InitTypeDef  GPIO_InitStructure;
-
+	NVIC_InitTypeDef NVIC_InitStructure;
 	ADC_CommonInitTypeDef	ADC_CommonInitStructure;
 	ADC_InitTypeDef	ADC_InitStructure;
 	DMA_InitTypeDef	DMA_InitStructure;
@@ -66,7 +66,7 @@ void ADCC_Configuration()
 	
 	DMA_Cmd(DMA2_Stream1, ENABLE);
 
-	NVIC_InitTypeDef NVIC_InitStructure;
+
 
 	NVIC_InitStructure.NVIC_IRQChannel = DMA2_Stream1_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
@@ -110,7 +110,8 @@ void ADCC_Configuration()
 void ADCP_Configuration(void)
 {    
 	GPIO_InitTypeDef  GPIO_InitStructure;
-
+	NVIC_InitTypeDef NVIC_InitStructure;
+	
 	ADC_CommonInitTypeDef ADC_CommonInitStructure;
 	ADC_InitTypeDef ADC_InitStructure;
 	DMA_InitTypeDef       DMA_InitStructure;
@@ -166,7 +167,7 @@ void ADCP_Configuration(void)
 	ADC_DMACmd(ADC1, ENABLE);
 	ADC_Cmd(ADC1, ENABLE);
 	
-	NVIC_InitTypeDef NVIC_InitStructure;
+
 	NVIC_InitStructure.NVIC_IRQChannel = DMA2_Stream0_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
@@ -206,10 +207,12 @@ void DMA2_Stream1_IRQHandler(void)
 				if(buff_index1 < 6)
 				{					
 					  filter_buffer(filter_current_Value,ADCC_CH_NUM,buff_index1,adc_finish.adc_average_c[buff_index1]);
-						buff_index1 ++;
+					  buff_index1 ++;
 				}
 				else
-					 buff_index1 = 0;
+				{
+				  buff_index1 = 0;
+				}
 				DMA_ClearITPendingBit(DMA2_Stream1, DMA_IT_TCIF1);
 		}
 }
@@ -240,12 +243,11 @@ void DMA2_Stream0_IRQHandler(void)
 
 static void filter_arrry_init(void)
 {
-		init_circular_list(filter_current_value, ADCC_FILTER_NUM);
-	
-		init_circular_list(filter_pressure_value,ADCP_FILTER_NUM);
+  init_circular_list(filter_current_value, ADCC_FILTER_NUM);
+  init_circular_list(filter_pressure_value,ADCP_FILTER_NUM);
 }
 
 ADC_finish * get_adc_finish_handle(void)
 {
-	return &adc_finish;
+  return &adc_finish;
 }

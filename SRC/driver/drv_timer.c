@@ -190,41 +190,39 @@ void set_motor_direction(MOTOR_SERVO_SELECT f_select, SERVO_DIR_SEL servo_dir)
 }
 void current_sys_callback(current_callback current_callback_in)
 {
-    current_callback_func = current_callback_in;
+  current_callback_func = current_callback_in;
 }
 
 void pressure_sys_callback(pressure_callback pressure_callback_in)
 {
-		pressure_callback_func = pressure_callback_in;
+  pressure_callback_func = pressure_callback_in;
 }
 
 void angle_sys_callback(angle_callback angle_callback_in)
 {
-		angle_callback_func = angle_callback_in;
+  angle_callback_func = angle_callback_in;
 }
 
 
 
 void TIM2_IRQHandler(void)
 {
-  if(TIM_GetITStatus(TIM2,TIM_IT_Update)==SET)  
+  if(TIM_GetITStatus(TIM2,TIM_IT_Update)==SET)  //per 1/6 ms
   {
     if(current_callback_func)
-	  {
-		   current_callback_func();
-	  }
-		if(time_count == 300)
-		{
-				time_count = 0;
-				if(angle_callback_func)
-					angle_callback_func();  //per 50ms Collection angle
-		}
-		else 
-				time_count ++;
-		if(pressure_callback_func)
-		{
-			 pressure_callback_func();
-		}
-	  TIM_ClearITPendingBit(TIM2,TIM_IT_Update);
+    {
+      current_callback_func();
+    }
+    if(time_count == 300)  //per 50ms Collection angle
+    {
+      time_count = 0;
+      if(angle_callback_func)
+        angle_callback_func();  
+	  if(pressure_callback_func)
+        pressure_callback_func();
+	}
+    else 
+      time_count++;
+	TIM_ClearITPendingBit(TIM2,TIM_IT_Update);
   }
 }

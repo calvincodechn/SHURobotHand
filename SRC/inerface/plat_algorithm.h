@@ -2,12 +2,12 @@
 #define _PLAT_ALGORITHM_H
 
 /*  discription: init circular struct list. 
-    ----------------------------------------------------
+s----------------------------------------------------
     ->  ->      \1  sturct {
     ^    |      \2     data     
-		|    V      \3     next
-		<-  <-      \4  }plist_name[data_len];
-		----------------------------------------------------
+	|    V      \3     next
+	<-  <-      \4  }plist_name[data_len];
+----------------------------------------------------
 *******************************************************/
 #define init_circular_list(plist_name, data_len) { \
 uint32_t data_cur = 0; \
@@ -53,9 +53,7 @@ buff_name[j_cur + 1].data[buff_index] = temp; \
 } \
 } \
 } \
-return_value = ((uint16_t)buff_name[(filter_len - 1) / 2].data[buff_index] + \
-(uint16_t)buff_name[(filter_len - 1) / 2 + (filter_len - 1) % 2].data[buff_index]) >> 1; \
+return_value = ((uint64_t)buff_name[(filter_len - 1) / 2].data[buff_index] + \
+(uint64_t)buff_name[(filter_len - 1) / 2 + (filter_len - 1) % 2].data[buff_index]) >> 1; \
 }
-//*return_value = ((uint64_t)buff_name[(filter_len - 1) / 2].data[buff_index] + 
-//(uint64_t)buff_name[(filter_len - 1) / 2 + (filter_len - 1) % 2].data[buff_index]) >> 1; 
 #endif

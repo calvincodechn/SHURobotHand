@@ -15,13 +15,13 @@ void angle_loop_main(void);
 void angle_loop_init(void)
 {
     angle_sys_callback(angle_loop_main);
-	  filter_arrry_init_angle();
+	filter_arrry_init_angle();
 }
 
 
 static void filter_angle_fuction(void)
 {
-		SPI_SENSORS *spi_sensor;
+/*		SPI_SENSORS *spi_sensor;
 		spi_sensor = get_spi_sensor_handle();
 		memcpy(filter_angle_Value,spi_sensor->spi_value_a,12);//copy value
 		filter_angle_Value = filter_angle_Value->next;//loop assignment
@@ -32,14 +32,14 @@ static void filter_angle_fuction(void)
 		}
 		else
 				buff_index3 = 0;
-
+*/
 }
 
 
 void angle_loop_main(void)
 {
 		
-	 _SPI_start_sample();
+	_SPI_start_sample();
 	filter_angle_fuction();
 	 
 }

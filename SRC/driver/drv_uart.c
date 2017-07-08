@@ -51,13 +51,13 @@ static void _drv_uart_system_init(uint32_t baudrate)
 {
 	
 		DMA_InitTypeDef DMA_InitStructure;
-	
+		NVIC_InitTypeDef NVIC_InitStructure1;
 	
 		GPIO_InitTypeDef   GPIO_InitStructure;
 		USART_InitTypeDef  USART_InitStructure;
 		NVIC_InitTypeDef   NVIC_InitStructure;
 	
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2,ENABLE);//使能USART1时钟
+        RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2,ENABLE);//使能USART1时钟
 		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD,ENABLE);
 		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1,ENABLE);
 	
@@ -123,7 +123,7 @@ static void _drv_uart_system_init(uint32_t baudrate)
 		
 		DMA_Cmd(DMA1_Stream5, ENABLE); 
 		
-		NVIC_InitTypeDef NVIC_InitStructure1;
+
 
 		NVIC_InitStructure1.NVIC_IRQChannel = DMA1_Stream5_IRQn;
 		NVIC_InitStructure1.NVIC_IRQChannelPreemptionPriority = 2;
