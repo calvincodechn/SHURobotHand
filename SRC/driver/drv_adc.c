@@ -11,17 +11,12 @@ uint16_t* _ADCP_start_sample(void);
 
 //ReadBuffC filter_current_value[ADCC_FILTER_NUM];	
 static ReadBuffC filter_current_value[ADCC_FILTER_NUM];
-
 static ReadBuffP filter_pressure_value[ADCP_FILTER_NUM];
+static ReadBuffC *p_filter_current = filter_current_value;
+static ReadBuffP *p_filter_pressure = filter_pressure_value;
 
-static ReadBuffC *filter_current_Value = filter_current_value;
-
-static ReadBuffP *filter_pressure_Value = filter_pressure_value;
-
-static uint8_t buff_index1 = 0;
-
-static uint8_t buff_index2 = 0;
 static void filter_arrry_init(void);
+
 void ADCC_Configuration()
 {    
 	GPIO_InitTypeDef  GPIO_InitStructure;
@@ -109,12 +104,12 @@ void ADCC_Configuration()
 
 void ADCP_Configuration(void)
 {    
-	GPIO_InitTypeDef  GPIO_InitStructure;
+	GPIO_InitTypeDef GPIO_InitStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
 	
 	ADC_CommonInitTypeDef ADC_CommonInitStructure;
 	ADC_InitTypeDef ADC_InitStructure;
-	DMA_InitTypeDef       DMA_InitStructure;
+	DMA_InitTypeDef DMA_InitStructure;
 
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB|RCC_AHB1Periph_GPIOC|RCC_AHB1Periph_DMA2, ENABLE); 
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE); //ADC1
@@ -176,7 +171,6 @@ void ADCP_Configuration(void)
 	
 	DMA_ITConfig(DMA2_Stream0, DMA_IT_TC, ENABLE);
 	DMA_Cmd(DMA2_Stream0, ENABLE);
-	
 }	
 
 uint16_t* _ADCP_start_sample(void)
@@ -200,54 +194,37 @@ ADC_SENSORS* get_adc_sensor_handle(void)
 
 void DMA2_Stream1_IRQHandler(void)
 {
-		if(DMA_GetITStatus(DMA2_Stream1, DMA_IT_TCIF1) != RESET)
-		{			
-				memcpy(filter_current_Value,adc_sensor.adc_value_c,6);//copy value
-				filter_current_Value = filter_current_Value->next;//loop assignment
-				if(buff_index1 < 6)
-				{					
-					  filter_buffer(filter_current_Value,ADCC_CH_NUM,buff_index1,adc_finish.adc_average_c[buff_index1]);
-					  buff_index1 ++;
-				}
-				else
-				{
-				  buff_index1 = 0;
-				}
-				DMA_ClearITPendingBit(DMA2_Stream1, DMA_IT_TCIF1);
-		}
+  if(DMA_GetITStatus(DMA2_Stream1, DMA_IT_TCIF1) != RESET)
+  {			
+    memcpy(p_filter_current->data, adc_sensor.adc_value_c, sizeof(p_filter_current->data));//copy value
+	p_filter_current = p_filter_current->next;
+	DMA_ClearITPendingBit(DMA2_Stream1, DMA_IT_TCIF1);
+  }
 }
 
 void DMA2_Stream0_IRQHandler(void)
 {
-		int i;
-		if(DMA_GetITStatus(DMA2_Stream0, DMA_IT_TCIF0) != RESET)
-		{
-				memcpy(filter_pressure_Value,adc_sensor.adc_value_p,10);
-				/*
-				for(i =0;i < 6;i++)
-				{
-						filter_pressure_Value->data[i] = adp_sensor.adc_value_p[i];
-				}*/
-				filter_pressure_Value = filter_pressure_Value->next;
-				if(buff_index2 < 5)
-				{
-						filter_buffer(filter_pressure_Value,ADCP_CH_NUM,buff_index2,adc_finish.adc_average_p[buff_index2]);
-						buff_index2 ++;
-					  
-				}
-				else
-					  buff_index2 = 0;
-				DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_TCIF0);
-		}
+  if(DMA_GetITStatus(DMA2_Stream0, DMA_IT_TCIF0) != RESET)
+  {
+    //memcpy(filter_pressure_Value,adc_sensor.adc_value_p,10);
+    DMA_ClearITPendingBit(DMA2_Stream0, DMA_IT_TCIF0);
+  }
 }
 
 static void filter_arrry_init(void)
 {
   init_circular_list(filter_current_value, ADCC_FILTER_NUM);
-  init_circular_list(filter_pressure_value,ADCP_FILTER_NUM);
+  init_circular_list(filter_pressure_value, ADCP_FILTER_NUM);
 }
 
 ADC_finish * get_adc_finish_handle(void)
 {
   return &adc_finish;
 }
+
+void get_readbuff_current(FilterParaC *temp_filter)
+{
+  temp_filter->filter_buf = filter_current_value;
+  temp_filter->filter_len = sizeof(filter_current_value) / sizeof(ReadBuffC);
+}
+

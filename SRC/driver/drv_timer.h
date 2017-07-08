@@ -5,11 +5,15 @@
 #include <stdint.h>
 #include "hand_define.h"
 
+#define TIM2_PRESCALER         13   //14-1
+#define TIM2_PERIOD            999  //1000-1 (psc)  Tclk = 84Mhz  // Tout = ((arr+1)*(psc+1))/Tclk
+#define PWM_PRESCALER          9    //10-1
+#define PWM_PERIOD             559  //560-1
+
 typedef void (*current_callback)(void);
-
 typedef void (*pressure_callback)(void);
-
 typedef void (*angle_callback)(void);
+
 
 void timer_Int_Init(void);
 void timer_pwm_init(uint16_t timer_prescaler, uint32_t timer_period);

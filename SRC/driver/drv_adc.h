@@ -11,11 +11,17 @@
 
 typedef uint16_t* (*ADC_start_sample)(void);
 
-typedef struct read_buff_c {
+typedef struct read_buff_c
+{
 	uint16_t data[ADCC_CH_NUM];
 	struct read_buff_c *next;
 }ReadBuffC, *pReadBuffC;
 
+typedef struct para_filter_c
+{
+  uint32_t filter_len;
+  ReadBuffC *filter_buf;
+}FilterParaC, *pFilterParaC;
 
 typedef struct read_buff_p {
 	uint16_t data[ADCP_CH_NUM];
@@ -49,4 +55,6 @@ extern ADC_finish * get_adc_finish_handle(void);
 
 extern uint16_t* _ADCC_start_sample(void);
 extern uint16_t* _ADCP_start_sample(void);
+
+extern void get_readbuff_current(FilterParaC *temp_filter);
 #endif

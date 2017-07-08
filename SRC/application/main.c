@@ -5,7 +5,7 @@
 #include "inter_sensors.h"
 //#include "sys_fuction.h"
 #include "transfer_protocol_uart.h"
-#include "Hand_Main_Fuction.h"
+#include "protocol_ppp.h"
 
 #include "led_blink.h"
 #include "drv_uart.h"
@@ -37,16 +37,15 @@ void init_dev(void)
 
 static int32_t loop(void)
 {
-	led_blink(500);	
+	led_blink(500);
 	return 1;
 }
 
 int main(void)
 {
 	init_dev();
-
 	while(loop())
 	{	
-			_serial_hand_handle();
+      _serial_hand_handle();
 	}
 }

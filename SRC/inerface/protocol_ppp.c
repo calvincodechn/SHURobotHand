@@ -3,7 +3,7 @@
 #include "drv_adc.h"
 #include "hand_define.h"
 
-#include "Hand_Main_Fuction.h"
+#include "protocol_ppp.h"
 
 #include "drv_sysclk.h"
 #include "transfer_protocol_uart.h"

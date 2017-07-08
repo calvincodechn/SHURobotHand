@@ -12,26 +12,26 @@
 #define CURRENT_VEC_LEN 4
 
 
-typedef struct current_filter
-{
-  uint32_t current_vector[CURRENT_FILTER_LEN];
-	uint32_t current_value;
-	uint8_t current_cur;
-}CurrentFilter, *pCurrentFilter;
+
 
 typedef struct pid_para
 {
-	int32_t ctl_kp;
-	int32_t ctl_ki;
-	int32_t ctl_kd;
+	float ctl_kp;
+	float ctl_ki;
+	float ctl_kd;
+	int32_t err;
+	int32_t err_last;
+	int32_t intergral;
 }PIDPara, *pPIDPara;
 
 typedef struct motor_para{
+  uint8_t motor_index;
   uint32_t pwm_duty;
+  SERVO_DIR_SEL direction;
   uint32_t current_input;
-  uint32_t current_alarm_time; //the time that current keeps large.
-  CurrentFilter current_filter;  //remember to init
-  PIDPara current_pid;
+  uint32_t current_value;
+  uint32_t current_alarm_time;  // the time that current keeps large.
+  PIDPara control_pid;
   struct motor_para *next;
 }CurrentLoopPara, *pCurrentLoopPara;
 
